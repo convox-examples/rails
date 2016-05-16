@@ -1,6 +1,6 @@
 # Rails on Convox Example
 
-This repository contains an example Ruby on Rails 4.2 app configured for local development and deployment via Convox.
+This repository contains an example Ruby on Rails 4.2 app configured for local development and deployment to Convox.
 
 The following is a step-by-step walkthrough of how the app was configured and why.
 
@@ -27,19 +27,19 @@ The generated Dockerfile inherits from the [convox/rails Docker image](https://h
 * a convox.rb file for logging to STDOUT
 * a bin/web script for booting the app
 
-#### build with optimal caching
+#### how Dockerfile describes the build
 
-Starting from the `convox/rails` image, the generated Dockerfile adds everything else that your particular app needs to build. There are basically 3 steps in this process. They are executed in this particular order to take best advantage of Docker's caching behavior.
+Starting from the `convox/rails` image, the [generated Dockerfile](https://github.com/convox-examples/rails/blob/master/Dockerfile) executes the remaining build steps that your Rails app needs. There are basically 3 steps in this process, and they are executed in a particular order to take advantage of Docker's build caching behavior.
 
-First, `Gemfile` and `Gemfile.lock` are copied and `bundle install` is run. This happens first because it is slow and something that's done infrequently. After running once, this step will be cached unless the cache is busted by later edits to `Gemfile` or `Gemfile.lock`.
+1. `Gemfile` and `Gemfile.lock` are copied and `bundle install` is run. This happens first because it is slow and something that's done infrequently. After running once, this step will be cached unless the cache is busted by later edits to `Gemfile` or `Gemfile.lock`.
 
-Next all the files necessary for the Rails asset pipeline are copied, and assets are built. Again, this is done early in the build process to optimize caching. The asset building step will only be run in the future if these files have changed.
+2. All the files necessary for the Rails asset pipeline are copied, and assets are built. Again, this is done early in the build process to optimize caching. The asset building step will only be run in the future if these files have changed.
 
-Finally, the rest of the application source is copied over. These files will change frequently, so this step of the build will very rarely be cached.
+3. The rest of the application source is copied over. These files will change frequently, so this step of the build will very rarely be cached.
 
 ### docker-compose.yml
 
-The `docker-compose.yml` file explains how to run the containers that make up your app. This generated file describes a `web` container which will be your main Rails web process.
+The `docker-compose.yml` file explains how to run the containers that make up your app. This generated file describes a `web` container which will be your main Rails web process. The various sections of the `web` configuration are described below:
 
 #### build
 
@@ -63,7 +63,7 @@ The labels section is used by Convox for configuration not covered by the offici
 
 `convox.port.443.proxy=true` means that PROXY protocol TCP headers are injected into requests on port 443. These headers can then be used by nginx to set the HTTP headers your Rails application expects.
 
-See the [load balancer documentation] for more detailed info.
+See the [load balancer documentation](https://convox.com/docs/load-balancers/) for more detailed info.
 
 #### ports
 
