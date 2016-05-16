@@ -39,7 +39,7 @@ Starting from the `convox/rails` image, the [generated Dockerfile](https://githu
 
 ### docker-compose.yml
 
-The `docker-compose.yml` file explains how to run the containers that make up your app. This generated file describes a `web` container which will be your main Rails web process. The various sections of the `web` configuration are described below:
+The [docker-compose.yml](https://github.com/convox-examples/rails/blob/master/docker-compose.yml) file explains how to run the containers that make up your app. This generated file describes a `web` container which will be your main Rails web process. The various sections of the `web` configuration are described below:
 
 #### build
 
@@ -73,7 +73,8 @@ ports:
   - 443:4001
 ```
 
-The ports section describes which ports your application listens on and which ports of the web container they map to. In this case the application is listening on ports 80 and 443 for http and https traffic. These requests get routed to the web container(s) on ports 4000 and 4001, respectively. 
+The ports section describes which ports your application listens on and which ports of the web container they map to. In this case the application is listening on ports 80 and 443 for http and https traffic. These requests get routed to the web container on ports 4000 and 4001, respectively. 
+
 ## .dockerignore
 
 This repo also includes a [.dockerignore](https://github.com/convox-examples/rails/blob/master/.dockerignore) file that ignores files and directories not needed in the app's Docker image. It's important to have a good `.dockerignore` to keep images small and builds, pushes and pulls fast.
