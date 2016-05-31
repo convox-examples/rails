@@ -79,21 +79,6 @@ The ports section describes which ports your application listens on and which po
 
 `convox init` also generates a [.dockerignore](https://github.com/convox-examples/rails/blob/master/.dockerignore) file that ignores files and directories not needed in the app's Docker image. It's important to have a good `.dockerignore` to keep images small and builds, pushes and pulls fast.
 
-## Running the app Locally
-
-```bash
-convox start
-```
-
-## Deploying the application
-
-After [installing a Rack](https://convox.com/docs/installing-a-rack/):
-
-```bash
-convox apps create
-convox deploy
-```
-
 ## Linking a database container
 
 Up to this point the app has been using sqlite3 for its database. In a production environment, however, a database like PostgreSQL is more likely to be used. Linking a Postgres container to your app is pretty straightforward. Here's how we did it in this example.
@@ -120,6 +105,23 @@ database:
 
 We want the database to listen for connections on port 5432. When we deploy this app an internal TCP load balancer will be created to listen on that port.
 
+### Persisting Data
+
+Since the development database will run locally as a Docker container, it will start fresh with an empty database every time we run `convox start`. While this blank-slate behavior can be nice sometimes, in this case we want to keep the data in our database across starts. This can be accomplished using Docker volumes.
+
+By [mounting a host volume onto our database container](https://github.com/convox-examples/rails/commit/6168ff7b756555674c652b40fa7205e9b1cb6284), we can keep many of the files the database creates. For `convox/postgres`, we need to mount a host volume to `/var/lib/postgresql/data` in the container.
+
+The `database` section of `docker-compose.yml` now looks like:
+
+```yaml
+database:
+  image: convox/postgres
+  ports:
+    - 5432
+  volumes:
+    - /var/lib/example/postgres:/var/lib/postgresql/data
+```
+
 ### Link database to web
 
 Lastly, we need to link the database container to the web container. We do this by adding a `links` section to `web`:
@@ -132,3 +134,18 @@ links:
 This will cause a `DATABASE_URL` environment variable to be injected into the `web` environment, which it will use to connect to the database. You can read more about container linking [here](https://convox.com/docs/linking/).
 
 A linked container works well for local development. However, when you deploy this app, you'll want a "real" Postgres. To accomplish this you can provision an hosted Postgres instance via [convox services](https://convox.com/docs/postgresql/), [scale](https://convox.com/docs/scaling/) your `database` process count in your app to 0, and set the DATABASE_URL [environment variable](https://convox.com/docs/environment/) to point to the hosted Postgres.
+
+## Running the app Locally
+
+```bash
+convox start
+```
+
+## Deploying the application
+
+After [installing a Rack](https://convox.com/docs/installing-a-rack/):
+
+```bash
+convox apps create
+convox deploy
+```
