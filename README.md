@@ -122,6 +122,8 @@ database:
     - /var/lib/example/postgres:/var/lib/postgresql/data
 ```
 
+**NOTE:** It's a good idea to use a host directory outside of the application directory for your data. This ensures your Docker volume won't have unwanted interactions with `convox start`'s built in code syncing. On Linux the `/var/lib` directory is a good place for this. Since our Rails app is called "example" here we've chosen `/var/lib/example/postgres` as our data directory on the host.
+
 ### Link database to web
 
 Lastly, we need to link the database container to the web container. We do this by adding a `links` section to `web`:
