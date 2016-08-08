@@ -12,3 +12,5 @@ database:
   image: convox/postgres
   ports:
     - 5432
+  volumes:
+    - /var/lib/postgresql/data
