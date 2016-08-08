@@ -234,10 +234,10 @@ Untracked files:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-Now you can execute the generated database migration to apply changes to your Postgres container:
+You can execute the generated database migration on the container as well:
 
 ```
-# rake db:migrate
+root@2776dea3621e:/app# rake db:migrate
 == 20160808061714 CreateBooks: migrating ======================================
 -- create_table(:books)
    -> 0.0590s
