@@ -143,11 +143,146 @@ A linked container works well for local development. However, when you deploy th
 convox start
 ```
 
+## Developing in the container
+
+Once you have your app up and running, you can take advantage of Convox code sync to execute `rails` and `rake` commands inside the container, while still editing and committing code on your host machine.
+
+You can use the `docker exec` command to get a `bash` session on your web container:
+
+```
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                                              NAMES
+026cfe0ad0cb        convox/proxy        "proxy-link 443 4001 "   54 seconds ago      Up 52 seconds       0.0.0.0:443->443/tcp                               rails-web-proxy-443
+96a7d05ed465        convox/proxy        "proxy-link 80 4000 t"   54 seconds ago      Up 53 seconds       0.0.0.0:80->80/tcp                                 rails-web-proxy-80
+2776dea3621e        rails/web           "bin/web"                55 seconds ago      Up 54 seconds       0.0.0.0:32807->4000/tcp, 0.0.0.0:32806->4001/tcp   rails-web
+e70c8bf0c74f        rails/database      "/docker-entrypoint.s"   55 seconds ago      Up 54 seconds       0.0.0.0:32805->5432/tcp                            rails-database
+```
+
+Grab the CONTAINER ID of the rails/web process and exec onto the container:
+
+```
+$ docker exec -it 2776dea3621e bash
+root@2776dea3621e:/app#
+```
+
+Once you're in the container you can run a Rails generator:
+
+```
+root@2776dea3621e:/app# rails g scaffold Book author:string title:string
+Running via Spring preloader in process 52
+      invoke  active_record
+      create    db/migrate/20160808061714_create_books.rb
+      create    /models/book.rb
+      invoke    test_unit
+      create      test/models/book_test.rb
+      create      test/fixtures/books.yml
+      invoke  resource_route
+       route    resources :books
+      invoke  scaffold_controller
+      create    /controllers/books_controller.rb
+      invoke    erb
+      create      /views/books
+      create      /views/books/index.html.erb
+      create      /views/books/edit.html.erb
+      create      /views/books/show.html.erb
+      create      /views/books/new.html.erb
+      create      /views/books/_form.html.erb
+      invoke    test_unit
+      create      test/controllers/books_controller_test.rb
+      invoke    helper
+      create      /helpers/books_helper.rb
+      invoke      test_unit
+      invoke    jbuilder
+      create      /views/books/index.json.jbuilder
+      create      /views/books/show.json.jbuilder
+      invoke  assets
+      invoke    coffee
+      create      /assets/javascripts/books.coffee
+      invoke    scss
+      create      /assets/stylesheets/books.scss
+      invoke  scss
+      create    /assets/stylesheets/scaffolds.scss
+```
+
+And note that `convox start` has synced the generated files back to your host where they can be edited and commited:
+
+```
+$ git status
+On branch master
+Your branch is ahead of 'origin/master' by 2 commits.
+  (use "git push" to publish your local commits)
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+  modified:   config/routes.rb
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+  app/assets/javascripts/books.coffee
+  app/assets/stylesheets/books.scss
+  app/assets/stylesheets/scaffolds.scss
+  app/controllers/books_controller.rb
+  app/helpers/books_helper.rb
+  app/models/book.rb
+  app/views/books/
+  db/migrate/
+  test/controllers/books_controller_test.rb
+  test/fixtures/books.yml
+  test/models/book_test.rb
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Now you can execute the generated database migration to apply changes to your Postgres container:
+
+```
+# rake db:migrate
+== 20160808061714 CreateBooks: migrating ======================================
+-- create_table(:books)
+   -> 0.0590s
+== 20160808061714 CreateBooks: migrated (0.0593s) =============================
+```
+
+You can now visit http://localhost/books and create a book record:
+
+
+
+Since you're persisting Postgres data you can quit `convox start` and run it again and the data will still be there!
+
+
+
 ## Deploying the application
 
-After [installing a Rack](https://convox.com/docs/installing-a-rack/):
+After [installing a Rack](https://convox.com/docs/installing-a-rack/) create an app and deploy your code to it:
 
 ```bash
-convox apps create
-convox deploy
+convox apps create myapp
+convox deploy -a myapp
+```
+
+You should also create a Postgres service:
+
+```bash
+$ convox services create postgres --name myapp-db
+```
+
+```bash
+$ convox services info myapp-db
+Name    myapp-db
+Status  running
+Exports
+  URL: postgres://postgres:UWKXRYGYYRRKOSQFDDQPFUYQDOVHGX@convox-myapp-db.cbm068zjzjcr.us-east-1.rds.amazonaws.com:5432/app
+```
+
+Update your deployed app's environment to use the database service
+
+```bash
+$ convox env set postgres://postgres:UWKXRYGYYRRKOSQFDDQPFUYQDOVHGX@convox-myapp-db.cbm068zjzjcr.us-east-1.rds.amazonaws.com:5432/app --promote -a myapp
+```
+
+Now that your deployed app is using a Postgres service, it no longer needs the database container. Run the following command to stop running the container and deprovision its load balancer:
+
+```bash
+$ convox scale database --count=-1 -a myapp
 ```
