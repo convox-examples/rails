@@ -109,7 +109,7 @@ We want the database to listen for connections on port 5432. When we deploy this
 
 Since the development database will run locally as a Docker container, it will start fresh with an empty database every time we run `convox start`. While this blank-slate behavior can be nice sometimes, in this case we want to keep the data in our database across starts. This can be accomplished using Docker volumes.
 
-By [mounting a host volume onto our database container](https://github.com/convox-examples/rails/commit/6168ff7b756555674c652b40fa7205e9b1cb6284), we can keep many of the files the database creates. For `convox/postgres`, we need to mount a host volume to `/var/lib/postgresql/data` in the container.
+By [mounting a host volume onto our database container](https://github.com/convox-examples/rails/commit/f803d9ece929ba69c0e13249952e17abc76195ae), we can keep many of the files the database creates. For `convox/postgres`, we need to mount a host volume to `/var/lib/postgresql/data` in the container.
 
 The `database` section of `docker-compose.yml` now looks like:
 
@@ -119,10 +119,10 @@ database:
   ports:
     - 5432
   volumes:
-    - /var/lib/example/postgres:/var/lib/postgresql/data
+    - /var/lib/postgresql/data
 ```
 
-**NOTE:** It's a good idea to use a host directory outside of the application directory for your data. This ensures your Docker volume won't have unwanted interactions with `convox start`'s built in code syncing. On Linux the `/var/lib` directory is a good place for this. Since our Rails app is called "example" here we've chosen `/var/lib/example/postgres` as our data directory on the host.
+**NOTE**: By omitting the host side of the `host:container` volume specification, we let Convox choose a good location for the host volume. Development volumes are namespaced by app and stored in `~/.convox/volumes`.
 
 ### Link database to web
 
