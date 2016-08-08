@@ -244,7 +244,7 @@ Now you can execute the generated database migration to apply changes to your Po
 == 20160808061714 CreateBooks: migrated (0.0593s) =============================
 ```
 
-You can now visit http://localhost/books and create a book record:
+You can now visit [https://localhost/books](https://localhost/books) and create a book record:
 
 ![books form](https://raw.githubusercontent.com/convox-examples/rails/master/.README/books_form.png)
 
@@ -281,6 +281,12 @@ Update your deployed app's environment to use the database service
 
 ```bash
 $ convox env set postgres://postgres:UWKXRYGYYRRKOSQFDDQPFUYQDOVHGX@convox-myapp-db.cbm068zjzjcr.us-east-1.rds.amazonaws.com:5432/app --promote -a myapp
+```
+
+Don't forget to run the migrations:
+
+```bash
+$ convox run web rake db:migrate -a myapp
 ```
 
 Now that your deployed app is using a Postgres service, it no longer needs the database container. Run the following command to stop running the container and deprovision its load balancer:
