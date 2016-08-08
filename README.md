@@ -246,11 +246,13 @@ Now you can execute the generated database migration to apply changes to your Po
 
 You can now visit http://localhost/books and create a book record:
 
+![books form](https://raw.githubusercontent.com/convox-examples/rails/master/.README/books_form.png)
 
+![book created](https://raw.githubusercontent.com/convox-examples/rails/master/.README/book_created.png)
 
 Since you're persisting Postgres data you can quit `convox start` and run it again and the data will still be there!
 
-
+![list books](https://raw.githubusercontent.com/convox-examples/rails/master/.README/list_books.png)
 
 ## Deploying the application
 
