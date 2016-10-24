@@ -1,5 +1,7 @@
 web:
   build: .
+  cpu_shares: 10
+  mem_limit: 512MB
   labels:
     - convox.port.443.protocol=tls
     - convox.port.443.proxy=true
@@ -8,6 +10,7 @@ web:
   ports:
     - 80:4000
     - 443:4001
+
 database:
   image: convox/postgres
   labels:
