@@ -280,7 +280,7 @@ Exports
 Update your deployed app's environment to use the database service
 
 ```bash
-$ convox env set postgres://postgres:UWKXRYGYYRRKOSQFDDQPFUYQDOVHGX@convox-myapp-db.cbm068zjzjcr.us-east-1.rds.amazonaws.com:5432/app --promote -a myapp
+$ convox env set DATABASE_URL=postgres://postgres:UWKXRYGYYRRKOSQFDDQPFUYQDOVHGX@convox-myapp-db.cbm068zjzjcr.us-east-1.rds.amazonaws.com:5432/app --promote -a myapp
 ```
 
 Don't forget to run the migrations:
