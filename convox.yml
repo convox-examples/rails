@@ -1,0 +1,10 @@
+resources:
+  database:
+    type: postgres
+services:
+  web:
+    build: .
+    health: /health
+    port: 3000
+    resources:
+      - database

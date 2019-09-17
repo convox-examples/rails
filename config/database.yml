@@ -1,0 +1,5 @@
+development:
+  url: <%= ENV["DATABASE_URL"].sub("mysql://", "mysql2://") %>
+
+production:
+  url: <%= ENV["DATABASE_URL"].sub("mysql://", "mysql2://") %>
