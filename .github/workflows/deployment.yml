@@ -12,7 +12,7 @@ jobs:
         password: ${{ secrets.CONVOX_DEPLOY_KEY }}
     - name: build
       id: build
-      uses: convox/action-build@v1
+      uses: convox/action-build@master
       with:
         rack: convox/staging
         app: rails
