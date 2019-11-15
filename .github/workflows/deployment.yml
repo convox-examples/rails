@@ -1,0 +1,32 @@
+name: Convox Deploy
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout
+      uses: actions/checkout@v1
+    - name: login
+      uses: convox/action-login@v1
+      with:
+        password: ${{ secrets.CONVOX_DEPLOY_KEY }}
+    - name: build
+      id: build
+      uses: convox/action-build@v1
+      with:
+        rack: convox/staging
+        app: rails
+    - name: migrate
+      uses: convox/action-run@v1
+      with:
+        rack: convox/staging
+        app: rails
+        service: web
+        release: ${{ steps.build.outputs.release }}
+        command: rake db:migrate
+    - name: promote
+      uses: convox/action-promote@v1
+      with:
+        rack: convox/staging
+        app: rails
+        release: ${{ steps.build.outputs.release }}
