@@ -23,7 +23,7 @@ jobs:
         app: rails
         service: web
         release: ${{ steps.build.outputs.release }}
-        command: rake db:migrate
+        command: env | grep DATABASE_URL ; env | grep CONVOX ; rake db:migrate
     - name: promote
       uses: convox/action-promote@v1
       with:
