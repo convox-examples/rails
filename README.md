@@ -1,6 +1,4 @@
 # examples/rails
-<a href="https://github.com/convox-examples/rails/actions"><img alt="Convox Deploy Status" src="https://github.com/convox-examples/rails/workflows/Convox%20Deploy/badge.svg"></a>
-<br>
 
 This repository contains an example Ruby on Rails app configured for local development and deployment to Convox.
 
