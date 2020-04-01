@@ -4,4 +4,6 @@ Rails.application.routes.draw do
   # basic health check
   get "/health", to: proc { [ 200, {}, [''] ] }
 
+  get "/test", to: proc { [ 200, {}, ["Hello World!"] ] }
+
 end
