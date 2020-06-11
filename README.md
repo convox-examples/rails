@@ -9,4 +9,5 @@ The following files were added/modified against a brand new Rails app:
 * [convox.yml](convox.yml)
 * [config/database.yml](config/database.yml)
 * [config/initializers/convox.rb](config/initializers/convox.rb)
+* [config/application.rb](config/application.rb)
 
