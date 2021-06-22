@@ -1,24 +1,35 @@
 FROM ruby:3.0.0-buster as development
 
-RUN apt-get update \
-    && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get install -y libqtwebkit4 libqt4-dev xvfb \
-    && npm install -g yarn \
-    && rm -rf /var/lib/apt/lists/*
+ENV RAILS_ENV development
 
-RUN gem install bundler
+# install system dependencies
+RUN apt-get update && apt-get install -y nodejs npm postgresql-client
+RUN npm install -g yarn
+
+# set working directory
+WORKDIR /usr/src/app
+
+# bundle install
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# yarn install
+COPY package.json yarn.lock ./
+RUN yarn install --check-files
+
+# copy the rest of the app
+COPY . .
+
+CMD ["rails", "server", "-b", "0.0.0.0"]
 
 EXPOSE 3000
 
-WORKDIR /share
-ADD Gemfile /share/Gemfile
-RUN bundle config set with development
-RUN bundle install
+from development as production
 
-ADD package.json /share/package.json
-RUN yarn install
+ARG SECRET_KEY_BASE
 
-ADD ./ /share
+ENV NODE_ENV production
+ENV RAILS_ENV production
+ENV RAILS_SERVE_STATIC_FILES true
 
-CMD ["rails", "server", "-b", "0.0.0.0"]
+RUN rake assets:precompile
