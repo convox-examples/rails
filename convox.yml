@@ -4,7 +4,10 @@ resources:
 services:
   web:
     build: .
-    health: /health
     port: 3000
+    environment:
+      - SECRET_KEY_BASE=
+
+
     resources:
       - database

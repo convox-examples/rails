@@ -1,4 +1,4 @@
-FROM ruby:2.6.4 AS development
+FROM ruby:3.0.0-buster as development
 
 ENV RAILS_ENV development
 
@@ -20,14 +20,16 @@ RUN yarn install --check-files
 # copy the rest of the app
 COPY . .
 
+CMD ["rails", "server", "-b", "0.0.0.0"]
+
 EXPOSE 3000
 
-CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
+from development as production
 
-FROM development
+ARG SECRET_KEY_BASE
 
+ENV NODE_ENV production
 ENV RAILS_ENV production
-ENV RAILS_LOG_TO_STDOUT true
 ENV RAILS_SERVE_STATIC_FILES true
 
 RUN rake assets:precompile
