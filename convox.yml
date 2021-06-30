@@ -7,6 +7,6 @@ services:
     build: .
     port: 3000
     environment:
-      - SECRET_KEY_BASE=
+      - SECRET_KEY_BASE=update-this-key-in-the-console
     resources:
       - database
