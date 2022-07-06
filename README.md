@@ -1,4 +1,4 @@
-# examples/rails
+# rails
 
 This repository contains an example Ruby on Rails app configured for both local development and deployment to Convox.
 
