@@ -39,7 +39,7 @@ Thumbs.db
 *.swo
 *~
 
-# Node
+# Node (if not needed in production)
 node_modules/
 yarn-error.log
 npm-debug.log*
@@ -59,3 +59,7 @@ npm-debug.log*
 # Credentials
 config/master.key
 config/credentials/*.key
+
+# Local development files
+docker-compose.yml
+Dockerfile.dev

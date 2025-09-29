@@ -59,18 +59,12 @@ yarn-debug.log*
 /config/master.key
 /config/credentials/*.key
 
-# Ignore bundler config
-/.bundle
-
-# Ignore all vendor/cache
-/vendor/cache/*
-
 # Temporary files
 *.tmp
 *.bak
 *.backup
 
-# Lock files (generated in Docker container during build)
+# Lock files - generated in Docker during build
 Gemfile.lock
 yarn.lock
 package-lock.json

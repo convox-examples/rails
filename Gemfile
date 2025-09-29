@@ -13,18 +13,10 @@ gem 'stimulus-rails'
 gem 'jbuilder'
 gem 'redis', '~> 5.0'
 gem 'bootsnap', require: false
-gem 'image_processing', '~> 1.2'
-gem 'psych', '~> 5.0'  # YAML parser, explicitly included
-
-# Background jobs
-# gem 'solid_queue', '~> 0.2'  # Requires additional setup
-
-# Caching  
-# gem 'solid_cache', '~> 0.2'  # Requires additional setup
+gem 'psych', '~> 5.0'
 
 # Assets
 gem 'sassc-rails'
-# gem 'tailwindcss-rails'  # Removed - not using Tailwind in this example
 
 # API
 gem 'rack-cors'
@@ -34,15 +26,11 @@ gem 'rack-attack'
 
 group :development, :test do
   gem 'debug', platforms: %i[ mri windows ]
-  gem 'rspec-rails', '~> 6.1'
-  gem 'factory_bot_rails'
-  gem 'faker'
 end
 
 group :development do
   gem 'web-console'
   gem 'listen', '~> 3.8'
-  gem 'spring'
 end
 
 group :test do

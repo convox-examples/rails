@@ -5,6 +5,7 @@ environment:
   - RAILS_LOG_TO_STDOUT=true
   - RAILS_SERVE_STATIC_FILES=true
   - SECRET_KEY_BASE
+  - ALLOW_ALL_HOSTS=true  # Simplified for example - allows all hosts including health checks
 
 resources:
   database:
@@ -13,46 +14,18 @@ resources:
       storage: 10
       version: 15
 
-  cache:
-    type: redis
-    options:
-      version: 7
-
 services:
   web:
     build: .
     port: 3000
     health: /health
     environment:
-      - WEB_CONCURRENCY=2
       - RAILS_MAX_THREADS=5
     resources:
       - database
-      - cache
     scale:
-      count: 1-3
-      cpu: 250     # Cloud Machine compatible
+      count: 1
+      cpu: 250
       memory: 512
-      targets:
-        cpu: 70
-        memory: 80
-
-  # Worker service commented out for now - Solid Queue setup needs more configuration
-  # worker:
-  #   build: .
-  #   command: bundle exec rake solid_queue:start
-  #   environment:
-  #     - WORKER_CONCURRENCY=5
-  #   resources:
-  #     - database
-  #     - cache
-  #   scale:
-  #     count: 1
-  #     cpu: 250
-  #     memory: 512
-
-timers:
-  cleanup:
-    schedule: "0 * * * *"  # Every hour
-    command: bundle exec rails cleanup:old_records
-    service: web
+    termination:
+      grace: 30

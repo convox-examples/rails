@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  # Root route - Dashboard
-  root 'dashboard#index'
+  # Root route - Simple home page that doesn't use asset pipeline
+  root 'home#index'
   
   # Health check endpoint
   get 'health', to: 'dashboard#health'
@@ -16,11 +16,6 @@ Rails.application.routes.draw do
     resources :users, only: [:index, :show, :create, :update, :destroy]
   end
   
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-  
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions
+  # Rails health check
   get "up" => "rails/health#show", as: :rails_health_check
-  
-  # Background job monitoring (if using Solid Queue web UI in future)
-  # mount SolidQueue::Engine => "/jobs"
 end

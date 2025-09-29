@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   
   # GET /users
   def index
-    @users = User.recent.page(params[:page])
+    @users = User.recent.limit(100)  # Changed from .page(params[:page]) to .limit(100)
   end
   
   # GET /users/1
