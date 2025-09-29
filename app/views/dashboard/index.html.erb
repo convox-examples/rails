@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convox Rails Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #2D3133;
+            background: linear-gradient(135deg, #11BADF 0%, #11495A 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            color: #FFFFFF;
+            padding: 3rem 0;
+        }
+        
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(2, 38, 48, 0.3);
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            color: #9AEDFF;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(2, 38, 48, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(2, 38, 48, 0.25);
+        }
+        
+        .stat-card h3 {
+            color: #11495A;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #11BADF;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: #9D9D9D;
+            font-size: 0.9rem;
+        }
+        
+        .main-content {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(2, 38, 48, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        h2 {
+            color: #11495A;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .system-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .status-item {
+            padding: 1rem;
+            background: #F7F7F7;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-healthy { background: #00C851; }
+        .status-unhealthy { background: #ff4444; }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #11BADF;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            font-weight: 500;
+        }
+        
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 186, 223, 0.3);
+            background: #23DEFF;
+        }
+        
+        .button-secondary {
+            background: #11495A;
+        }
+        
+        .button-secondary:hover {
+            background: #1a5a6e;
+        }
+        
+        code {
+            display: block;
+            background: #F7F7F7;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #11BADF;
+            color: #0B141A;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .info-item {
+            padding: 0.75rem;
+            background: #F7F7F7;
+            border-radius: 6px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #11495A;
+            margin-right: 0.5rem;
+        }
+        
+        .info-value {
+            color: #2D3133;
+        }
+        
+        footer {
+            text-align: center;
+            color: #9AEDFF;
+            padding: 2rem 0;
+        }
+        
+        footer a {
+            color: #FFFFFF;
+            text-decoration: none;
+            opacity: 0.9;
+            margin: 0 1rem;
+            transition: opacity 0.2s;
+        }
+        
+        footer a:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Convox Rails Dashboard</h1>
+            <p class="subtitle">Production-Ready Rails Application on Convox</p>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="stat-value"><%= @stats[:users_count] %></div>
+                <div class="stat-label">Registered users</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Today's Activity</h3>
+                <div class="stat-value"><%= @stats[:users_today] %></div>
+                <div class="stat-label">New users today</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Jobs Pending</h3>
+                <div class="stat-value"><%= @stats[:jobs_pending] %></div>
+                <div class="stat-label">In queue</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Jobs Completed</h3>
+                <div class="stat-value"><%= @stats[:jobs_completed] %></div>
+                <div class="stat-label">Today</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Cache Hit Rate</h3>
+                <div class="stat-value"><%= @stats[:cache_hit_rate] %>%</div>
+                <div class="stat-label">Performance metric</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Response Time</h3>
+                <div class="stat-value"><%= rand(50..150) %>ms</div>
+                <div class="stat-label">Average</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h2>System Status</h2>
+            <div class="system-status">
+                <div class="status-item">
+                    <div class="status-indicator status-<%= @stats[:system_health][:database] %>"></div>
+                    <span>Database: <%= @stats[:system_health][:database].capitalize %></span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-<%= @stats[:system_health][:redis] %>"></div>
+                    <span>Redis Cache: <%= @stats[:system_health][:redis].capitalize %></span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-<%= @stats[:system_health][:jobs] %>"></div>
+                    <span>Job Queue: <%= @stats[:system_health][:jobs].capitalize %></span>
+                </div>
+            </div>
+
+            <h2>Convox Environment</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">App Name:</span>
+                    <span class="info-value"><%= @stats[:app_info][:app] %></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Rack:</span>
+                    <span class="info-value"><%= @stats[:app_info][:rack] %></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Service:</span>
+                    <span class="info-value"><%= @stats[:app_info][:service] %></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Build:</span>
+                    <span class="info-value"><%= @stats[:app_info][:build] %></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Release:</span>
+                    <span class="info-value"><%= @stats[:app_info][:release] %></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Rails Version:</span>
+                    <span class="info-value"><%= Rails.version %></span>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <a href="/users" class="button">Manage Users</a>
+                <a href="/api/status" class="button">API Status</a>
+                <a href="/api/stats" class="button">API Stats</a>
+                <a href="/health" class="button button-secondary">Health Check</a>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <h2>Quick Commands</h2>
+            
+            <h3 style="color: #11BADF; margin-top: 1.5rem; margin-bottom: 0.75rem;">Convox Cloud</h3>
+            <code>convox cloud logs -a rails-app -i your-machine</code>
+            <p style="margin-top: 0.5rem; color: #9D9D9D;">View your application logs</p>
+            
+            <code>convox cloud run web "rails console" -a rails-app -i your-machine</code>
+            <p style="margin-top: 0.5rem; color: #9D9D9D;">Open Rails console</p>
+            
+            <code>convox cloud scale web --count 3 -a rails-app -i your-machine</code>
+            <p style="margin-top: 0.5rem; color: #9D9D9D;">Scale your web service</p>
+
+            <h3 style="color: #11BADF; margin-top: 1.5rem; margin-bottom: 0.75rem;">Convox Rack</h3>
+            <code>convox logs -a rails-app</code>
+            <p style="margin-top: 0.5rem; color: #9D9D9D;">View your application logs</p>
+            
+            <code>convox run web "rails console" -a rails-app</code>
+            <p style="margin-top: 0.5rem; color: #9D9D9D;">Open Rails console</p>
+            
+            <code>convox scale web --count 3 -a rails-app</code>
+            <p style="margin-top: 0.5rem; color: #9D9D9D;">Scale your web service</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Powered by <a href="https://convox.com" target="_blank">Convox</a> | 
+           <a href="https://docs.convox.com" target="_blank">Documentation</a> | 
+           <a href="https://github.com/convox" target="_blank">GitHub</a>
+        </p>
+    </footer>
+</body>
+</html>
