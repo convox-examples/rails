@@ -1,5 +1,72 @@
-<h1>New User</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New User - Convox Rails</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #2D3133;
+            background: linear-gradient(135deg, #11BADF 0%, #11495A 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            color: #FFFFFF;
+            padding: 2rem 0;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(2, 38, 48, 0.3);
+        }
+        .main-content {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(2, 38, 48, 0.2);
+        }
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #11BADF;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 186, 223, 0.3);
+            background: #23DEFF;
+        }
+        .button-secondary {
+            background: #11495A;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Create New User</h1>
+            <p style="color: #9AEDFF;">Add a new user to your application</p>
+        </header>
 
-<%= render 'form', user: @user %>
-
-<%= link_to 'Back', users_path %>
+        <div class="main-content">
+            <h2 style="color: #11495A; margin-bottom: 1.5rem;">User Information</h2>
+            <%= render "form", user: @user %>
+        </div>
+    </div>
+</body>
+</html>

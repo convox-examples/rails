@@ -1,5 +1,65 @@
-/.git
-/db/*.sqlite3
-/db/*.sqlite3-journal
-/log/*
-/tmp
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+README*
+LICENSE
+CHANGELOG*
+
+# Development
+.bundle/
+vendor/bundle/
+.env*
+.rspec
+.rubocop.yml
+
+# Test
+test/
+spec/
+features/
+coverage/
+
+# Logs and temp files
+log/*
+tmp/*
+*.log
+storage/*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node (if not needed in production)
+node_modules/
+yarn-error.log
+npm-debug.log*
+
+# Rails
+/public/packs
+/public/packs-test
+/public/assets
+.byebug_history
+.pry_history
+
+# Database
+*.sqlite3
+*.sqlite3-journal
+/db/*.sqlite3-*
+
+# Credentials
+config/master.key
+config/credentials/*.key
+
+# Local development files
+docker-compose.yml
+Dockerfile.dev

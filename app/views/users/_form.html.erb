@@ -1,22 +1,40 @@
-<%= form_with(model: user) do |form| %>
-  <% if user.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+<%= form_with(model: user, local: true) do |form| %>
+    <% if user.errors.any? %>
+        <div style="background: #ff4444; color: white; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+            <h3 style="margin-bottom: 0.5rem;">
+                <%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:
+            </h3>
+            <ul style="margin-left: 1.5rem;">
+                <% user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
 
-      <ul>
-        <% user.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+    <div style="margin-bottom: 1.5rem;">
+        <%= form.label :name, style: "display: block; color: #11495A; font-weight: 600; margin-bottom: 0.5rem;" %>
+        <%= form.text_field :name, 
+            style: "width: 100%; padding: 0.75rem; border: 1px solid #EDEDED; border-radius: 6px; font-size: 1rem;",
+            placeholder: "Enter full name" %>
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
+    <div style="margin-bottom: 1.5rem;">
+        <%= form.label :email, style: "display: block; color: #11495A; font-weight: 600; margin-bottom: 0.5rem;" %>
+        <%= form.email_field :email, 
+            style: "width: 100%; padding: 0.75rem; border: 1px solid #EDEDED; border-radius: 6px; font-size: 1rem;",
+            placeholder: "email@example.com" %>
+    </div>
 
-  <div class="actions">
-    <%= form.submit %>
-  </div>
+    <div style="margin-bottom: 1.5rem;">
+        <%= form.label :bio, style: "display: block; color: #11495A; font-weight: 600; margin-bottom: 0.5rem;" %>
+        <%= form.text_area :bio, 
+            style: "width: 100%; padding: 0.75rem; border: 1px solid #EDEDED; border-radius: 6px; font-size: 1rem; min-height: 120px;",
+            placeholder: "Brief description or bio (optional)" %>
+    </div>
+
+    <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+        <%= form.submit class: "button", style: "padding: 0.75rem 2rem;" %>
+        <%= link_to "Cancel", users_path, class: "button button-secondary" %>
+    </div>
 <% end %>

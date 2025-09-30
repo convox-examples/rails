@@ -1,12 +1,31 @@
+environment:
+  - PORT=3000
+  - RAILS_ENV=production
+  - RACK_ENV=production
+  - RAILS_LOG_TO_STDOUT=true
+  - RAILS_SERVE_STATIC_FILES=true
+  - SECRET_KEY_BASE
+  - ALLOW_ALL_HOSTS=true  # Simplified for example - allows all hosts including health checks
+
 resources:
   database:
     type: postgres
+    options:
+      storage: 10
+      version: 15
 
 services:
   web:
     build: .
     port: 3000
+    health: /health
     environment:
-      - SECRET_KEY_BASE=update-this-key-in-the-console
+      - RAILS_MAX_THREADS=5
     resources:
       - database
+    scale:
+      count: 1
+      cpu: 250
+      memory: 512
+    termination:
+      grace: 30

@@ -1,27 +1,155 @@
-<p id="notice"><%= notice %></p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users - Convox Rails</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #2D3133;
+            background: linear-gradient(135deg, #11BADF 0%, #11495A 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        header {
+            text-align: center;
+            color: #FFFFFF;
+            padding: 2rem 0;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(2, 38, 48, 0.3);
+        }
+        .main-content {
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(2, 38, 48, 0.2);
+        }
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #11BADF;
+            color: #FFFFFF;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+        }
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(17, 186, 223, 0.3);
+            background: #23DEFF;
+        }
+        .button-secondary {
+            background: #11495A;
+            margin-left: 0.5rem;
+        }
+        .button-danger {
+            background: #ff4444;
+        }
+        table {
+            width: 100%;
+            margin-top: 2rem;
+            border-collapse: collapse;
+        }
+        th {
+            background: #F7F7F7;
+            color: #11495A;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #EDEDED;
+        }
+        tr:hover {
+            background: #F7F7F7;
+        }
+        .notice {
+            background: #00C851;
+            color: white;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>User Management</h1>
+            <p style="color: #9AEDFF;">Manage your application users</p>
+        </header>
 
-<h1>Users</h1>
+        <div class="main-content">
+            <% if notice.present? %>
+                <div class="notice"><%= notice %></div>
+            <% end %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #11495A;">Users (<%= @users.count %>)</h2>
+                <div>
+                    <a href="/users/new" class="button">Add New User</a>
+                    <a href="/" class="button button-secondary">Back to Dashboard</a>
+                </div>
+            </div>
 
-  <tbody>
-    <% @users.each do |user| %>
-      <tr>
-        <td><%= user.name %></td>
-        <td><%= link_to 'Show', user %></td>
-        <td><%= link_to 'Edit', edit_user_path(user) %></td>
-        <td><%= link_to 'Destroy', user, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Bio</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @users.each do |user| %>
+                        <tr>
+                            <td><%= user.id %></td>
+                            <td><strong><%= user.name %></strong></td>
+                            <td><%= user.email %></td>
+                            <td><%= truncate(user.bio, length: 50) %></td>
+                            <td><%= user.created_at.strftime("%b %d, %Y") %></td>
+                            <td>
+                                <div class="actions">
+                                    <%= link_to "View", user, class: "button", style: "padding: 0.5rem 1rem; font-size: 0.9rem;" %>
+                                    <%= link_to "Edit", edit_user_path(user), class: "button button-secondary", style: "padding: 0.5rem 1rem; font-size: 0.9rem;" %>
+                                    <%= button_to "Delete", user, method: :delete, 
+                                        data: { confirm: "Are you sure?" }, 
+                                        class: "button button-danger", 
+                                        style: "padding: 0.5rem 1rem; font-size: 0.9rem;" %>
+                                </div>
+                            </td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
 
-<br>
-
-<%= link_to 'New User', new_user_path %>
+            <% if @users.empty? %>
+                <p style="text-align: center; padding: 2rem; color: #9D9D9D;">
+                    No users yet. <a href="/users/new" style="color: #11BADF;">Create the first user</a>
+                </p>
+            <% end %>
+        </div>
+    </div>
+</body>
+</html>
